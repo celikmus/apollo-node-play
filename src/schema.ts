@@ -23,6 +23,7 @@ const typeDefs = gql`
 
   input PostsInput {
     id: String
+    title: String
   }
 
   type Query {

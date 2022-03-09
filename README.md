@@ -1,6 +1,6 @@
-# apollo-node-ts-starter
+# apollo-node-play
 
-This is a starter for Apollo server with Node.js, Typescript, ESLint, Prettier, Codegen.
+This is my playground for Apollo server prototyping.
 
 ## Prerequisites
 - Node.js 10+

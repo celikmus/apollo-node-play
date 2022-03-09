@@ -1,9 +1,8 @@
 import { CreateUserInput, MutationResolvers, QueryResolvers } from './generated/types'
 import datasource, { posts } from './datasource'
 
-const createUser: MutationResolvers['registerUser'] = (parent, args) => {
+const createUser: MutationResolvers['registerUser'] = (_parent, args) => {
   const { email, firstName, lastName, password }: CreateUserInput = args.input
-
   const user = {
     email,
     firstName,
@@ -13,7 +12,6 @@ const createUser: MutationResolvers['registerUser'] = (parent, args) => {
   }
 
   datasource.push(user)
-
   return user
 }
 
@@ -35,9 +33,17 @@ const resolvers = {
   User: {
     posts: (parent, args) => {
       const {
-        input: { id },
+        input: { id, title },
       } = args
-      return id ? posts.filter((po) => po.id === id && po.authorId === parent.id) : posts
+      return id || title
+        ? posts
+            .filter((po) => {
+              return id ? po.authorId === parent.id && po.id === id : true
+            })
+            .filter((po) => {
+              return po.authorId === parent.id && (title ? new RegExp(title.replace(/\*+/g, '.+')).test(po.title) : true)
+            })
+        : posts
     },
   },
 }
