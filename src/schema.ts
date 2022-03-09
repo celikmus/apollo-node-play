@@ -7,6 +7,7 @@ const typeDefs = gql`
     lastName: String!
     email: String!
     password: String!
+    posts(input: PostsInput): [Post]
   }
 
   input CreateUserInput {
@@ -20,8 +21,19 @@ const typeDefs = gql`
     registerUser(input: CreateUserInput!): User!
   }
 
+  input PostsInput {
+    id: String
+  }
+
   type Query {
     users: [User!]!
+    posts(input: PostsInput): [Post]
+  }
+
+  type Post {
+    id: ID!
+    title: String!
+    authorId: ID!
   }
 `
 

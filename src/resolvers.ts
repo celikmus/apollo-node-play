@@ -1,5 +1,5 @@
 import { CreateUserInput, MutationResolvers, QueryResolvers } from './generated/types'
-import datasource from './datasource'
+import datasource, { posts } from './datasource'
 
 const createUser: MutationResolvers['registerUser'] = (parent, args) => {
   const { email, firstName, lastName, password }: CreateUserInput = args.input
@@ -21,12 +21,24 @@ const findAllUsers: QueryResolvers['users'] = () => {
   return datasource
 }
 
-const resolvers: Record<string, MutationResolvers | QueryResolvers> = {
+// Record<string, MutationResolvers | QueryResolvers | GraphQLTypeResolver<any, any>>
+const resolvers = {
   Mutation: {
     registerUser: createUser,
   },
   Query: {
     users: findAllUsers,
+    posts: () => {
+      return posts
+    },
+  },
+  User: {
+    posts: (parent, args) => {
+      const {
+        input: { id },
+      } = args
+      return id ? posts.filter((po) => po.id === id && po.authorId === parent.id) : posts
+    },
   },
 }
 
